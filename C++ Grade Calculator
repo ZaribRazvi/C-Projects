@@ -1,0 +1,91 @@
+#include <iostream>
+#include <cmath> // For rounding
+
+int main() {
+
+    double final_max, midterm_max;
+    double final_grade, midterm_grade, project_max[5], project_grade[5];
+
+    std::cout << "Enter the maximum grade for the final exam: ";
+    std::cin >> final_max;
+    
+    //if the maximum grade number entered is invalid:
+    while (final_max<0) {
+        std::cout << "Your maximum grade is invalid. Please re-enter your maximum grade: ";
+        std::cin >> final_max;
+    }
+
+    std::cout << "Enter your achieved grade for the final exam: ";
+    std::cin >> final_grade;
+
+    while (final_grade > final_max || final_grade < 0)
+    {
+    std::cout << "Your grade cannot be above the maximum grade or negative. Please re-enter your final exam grade: ";
+        std::cin >> final_grade;
+    }
+
+    std::cout << "Enter the maximum grade for the midterm exam: ";
+    std::cin >> midterm_max;
+
+    while (midterm_max<0) {
+        std::cout << "Your maximum grade is invalid. Please re-enter your maximum grade: ";
+        std::cin >> midterm_max;
+    }
+
+    std::cout << "Enter your achieved grade for the midterm exam: ";
+    std::cin >> midterm_grade;
+
+    while (midterm_grade > midterm_max || midterm_max < 0.0) {
+        std::cout << "Your grade cannot be above the maximum grade. Please re-enter your midterm grade: ";
+        std::cin >> midterm_grade;
+    }
+
+    for (int n = 1; n < 6; n++) {
+        std::cout << "Enter the maximum grade for project " << n << ": ";
+        std::cin >> project_max[n];
+
+        while (project_max[n] < 0) { //if the maximum grade is negative
+        std::cout << "The maximum grade for " << project_max[n] << " is invalid. Please input another value: ";
+        std::cin >> project_max[n];
+        }
+
+        std::cout << "Enter your achieved grade for project " << n << ": ";
+        std::cin >> project_grade[n];
+        while (project_grade[n] > project_max[n] || project_grade[n] < 0.0) {
+            std::cout << "The project grade cannot be negative or greater than the maximum grade. Please input another grade for project " << project_grade[n] << ": ";
+            std::cin >> project_grade[n];
+        }
+    }
+
+
+    double final_100 = 100.0 * final_grade / final_max;
+    double midterm_100 = 100.0 * midterm_grade / midterm_max;
+    double project_100[5];
+
+    for (int n = 0; n < 5; n++) {
+        project_100[n] = 100.0 * project_grade[n] / project_max[n];
+        if (project_100[n] < final_100) {
+            project_100[n] = final_100;
+        }
+    }
+
+    double exam_100 = (0.75 * final_100) + (0.25 * midterm_100); 
+    double project_avg_100 = (project_100[0] + project_100[1] + project_100[2] + project_100[3] + project_100[4]) / 5.0;
+
+    double final_overall_grade;
+    if (exam_100 <= 40) {
+        final_overall_grade = exam_100; // Exam avg is <= 40
+    } else if (exam_100 >= 60) {
+        final_overall_grade = (2.0 / 3.0) * exam_100 + (1.0 / 3.0) * project_avg_100; // Exam avg >= 60
+    } else {
+        // Exam avg between 40 and 60,
+        final_overall_grade = project_avg_100 * (1.0 / 3.0) * (exam_100 - 40.0) / 20.0 + exam_100 * (1 - (1.0 / 3.0) * (exam_100 - 40.0) / 20.0);                          ;
+    }
+
+    final_overall_grade = std::round(final_overall_grade + 1e-12); //rounding
+
+
+        std::cout << "Final grade: " << final_overall_grade << std::endl;
+
+    return 0;
+}
